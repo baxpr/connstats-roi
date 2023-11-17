@@ -36,17 +36,34 @@ for h = 1:height(rois)
     end
 end
 if isnan(keeprow)
-    error('ROI %s not found in connectivity matrix',seed_roi);
+    warning('ROI %s not found in connectivity matrix: extracting for ALL regions',seed_roi);
+    seed_roi = 'all';
 end
 
 
 %% Individual edges
-result = table();
-for k = 1:size(C,2)
-    if k==keeprow, continue, end
-    rname = C.Row{keeprow}(7:end);
-    cname = C.Properties.VariableNames{k}(7:end);
-    result.([rname '_' cname]) = C{keeprow,k};
+
+% Get them all if requested
+if strcmp(seed_roi,'all')
+    result = table();
+    for k1 = 1:size(C,1)-1
+        for k2 = k1+1:size(C,2)
+            rname = C.Row{k1}(7:end);
+            cname = C.Properties.VariableNames{k2}(7:end);
+            result.([rname '_' cname]) = C{k1,k2};
+        end
+    end
+
+else
+
+    result = table();
+    for k = 1:size(C,2)
+        if k==keeprow, continue, end
+        rname = C.Row{keeprow}(7:end);
+        cname = C.Properties.VariableNames{k}(7:end);
+        result.([rname '_' cname]) = C{keeprow,k};
+    end
+
 end
 
 
