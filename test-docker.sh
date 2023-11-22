@@ -8,4 +8,3 @@ docker run \
     matrix_csv /INPUTS/Z_removegm.csv \
     out_dir /OUTPUTS \
     seed_roi DMN_LatPar_L
-
