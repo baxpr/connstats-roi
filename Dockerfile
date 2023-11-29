@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:9
 
 # Initial system
 # java-1.8.0-openjdk                                 for MCR
