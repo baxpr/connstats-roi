@@ -6,7 +6,7 @@
 export MATLABROOT=~/MATLAB/R2023a
 export PATH=${MATLABROOT}/bin:${PATH}
 
-mcc -m -C -v ../src/connstats_roi.m \
+mcc -m -v ../src/connstats_roi.m \
     -N \
     -a ../src \
     -d ../bin

@@ -1,34 +1,18 @@
-FROM centos:9
+FROM containers.mathworks.com/matlab-runtime:r2023a
 
-# Initial system
-# java-1.8.0-openjdk                                 for MCR
-RUN yum -y update && \
-    yum -y install wget tar zip unzip && \
-    yum -y install java-1.8.0-openjdk libXt && \
-    yum clean all
-
-# Install the MCR
-RUN wget -nv https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/5/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2023a_Update_5_glnxa64.zip \
-    -O /opt/mcr_installer.zip && \
-    unzip /opt/mcr_installer.zip -d /opt/mcr_installer && \
-    /opt/mcr_installer/install -mode silent -agreeToLicense yes && \
-    rm -r /opt/mcr_installer /opt/mcr_installer.zip
-
-# Matlab env
 ENV MATLAB_SHELL=/bin/bash
-ENV MATLAB_RUNTIME=/usr/local/MATLAB/MATLAB_Runtime/R2023a
+ENV AGREE_TO_MATLAB_RUNTIME_LICENSE=yes
+ENV MATLAB_RUNTIME=/opt/matlabruntime/R2023a
+ENV MCR_INHIBIT_CTF_LOCK=1
+ENV MCR_CACHE_ROOT=/tmp
 
-# Copy the pipeline code. Matlab must be compiled before building. 
 COPY build /opt/connstats-roi/build
 COPY bin /opt/connstats-roi/bin
 COPY src /opt/connstats-roi/src
 COPY README.md /opt/connstats-roi
 
 # Add pipeline to system path
-ENV PATH=/opt/connstats-roi/src:/opt/connstats-roi/bin:${PATH}
-
-# Matlab executable must be run at build to extract the CTF archive
-RUN run_connstats_roi.sh ${MATLAB_RUNTIME} quit
+ENV PATH=/opt/connstats-roi/bin:${PATH}
 
 # Entrypoint
-ENTRYPOINT ["run_connstats_roi.sh","/usr/local/MATLAB/MATLAB_Runtime/R2023a"]
+ENTRYPOINT ["run_connstats_roi.sh","/opt/matlabruntime/R2023a"]
