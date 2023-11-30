@@ -14,5 +14,8 @@ ENV MCR_CACHE_ROOT=/tmp
 # Add pipeline to system path
 ENV PATH=/opt/connstats-roi/bin:${PATH}
 
+# Extract CTF
+RUN run_connstats_roi.sh /opt/matlabruntime/R2023a quit
+
 # Entrypoint
 ENTRYPOINT ["run_connstats_roi.sh","/opt/matlabruntime/R2023a"]
