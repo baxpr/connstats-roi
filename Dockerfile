@@ -5,7 +5,7 @@ COPY bin /opt/connstats-roi/bin
 COPY src /opt/connstats-roi/src
 COPY README.md /opt/connstats-roi
 
-#ENV MATLAB_SHELL=/bin/bash
+ENV MATLAB_SHELL=/bin/bash
 ENV AGREE_TO_MATLAB_RUNTIME_LICENSE=yes
 ENV MATLAB_RUNTIME=/opt/matlabruntime/R2023a
 ENV MCR_INHIBIT_CTF_LOCK=1
