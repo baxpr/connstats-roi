@@ -1,0 +1,38 @@
+# Post-conncalc processor
+# https://github.com/baxpr/connstats-roi
+---
+procyamlversion: 3.0.0-dev.0
+jobtemplate: job_template_v3.txt
+containers:
+  - name: connstats-roi
+    path: connstats-roi_v1.0.3.sif
+    source: docker://baxterprogers/connstats-roi:v1.0.3
+requirements:
+  walltime: '1:00:00'
+  memory: 8G
+
+inputs:
+  xnat:
+    filters:
+      - type: match
+        inputs: scan_fmri,assr_conncalc/scan_fmri
+    scans:
+      - name: scan_fmri
+        types: 'rsfMRI'
+    assessors:
+      - name: assr_conncalc
+        proctypes: conncalc-SCAN_v1
+        resources:
+          - {resource: ZMATRIX, fmatch: Z_removegm.csv}
+
+outputs:
+  - {path: stats.csv, type: FILE, resource: STATS}
+
+command: 
+  type: singularity_run
+  container: connstats-roi
+  args: >-
+    matrix_csv /INPUTS/Z_removegm.csv
+    out_dir /OUTPUTS
+    seed_roi all
+
